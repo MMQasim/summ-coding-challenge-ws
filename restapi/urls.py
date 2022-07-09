@@ -4,7 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns=[
-  path('api/',views.api),
+  path('',views.api),
   path('tarnslations/',views.tarnslations),
   path('tarnslations/<str:id>/',views.tarnslations)
   ]
