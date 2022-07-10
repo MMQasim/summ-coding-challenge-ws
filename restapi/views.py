@@ -15,23 +15,7 @@ from rest_framework.views import APIView
 def validate(str):
     return (len(str.strip())>0 and not(str.isnumeric()))
 
-'''class Tarnslations(APIView):
 
-    def get(self, request, format=None):
-        """
-        Return a list of all the existing users translations.
-        """
-        translations=Translation.objects.all()
-        serializer = TarnslationSerializer(data=translations,many=True)
-        serializer.is_valid(raise_exception=False)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request, format={"input_text":str,"output_text":str}):
-        serializer = TarnslationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
 
 @api_view(['GET'])
 def api(request):
@@ -50,8 +34,6 @@ def api(request):
 def tarnslations(request,id=False):
 
     if request.method=="POST":
-        
-        print(request.data['input_text'])
         if(validate(request.data['input_text']) and validate(request.data['output_text'])):
             serializer = TarnslationSerializer(data=request.data)
             if serializer.is_valid():
@@ -89,23 +71,12 @@ def tarnslations(request,id=False):
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
     elif request.method=='GET':
 
-        """
-        Return a list of all the existing users.
-        """
-
         translations=Translation.objects.all()
         serializer = TarnslationSerializer(data=translations,many=True)
         serializer.is_valid(raise_exception=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
         #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    """
-    get:
-    Return a list of all the existing users.
-
-    post:
-    Create a new user instance.
-    """
 
 
-    return Response( status=status.HTTP_400_BAD_REQUEST)
+    return Response( status=status.HTTP_404_NOT_FOUND)

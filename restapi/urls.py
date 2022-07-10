@@ -7,5 +7,6 @@ urlpatterns=[
   
   path('translations/',views.tarnslations),
   path('translations/<str:id>/',views.tarnslations),
+  path('api/',views.api),
   path('',views.api)
   ]
