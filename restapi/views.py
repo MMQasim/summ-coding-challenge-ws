@@ -1,8 +1,6 @@
 from django.shortcuts import render
 
 
-from django.http import HttpResponse
-
 from rest_framework import status
 from rest_framework.decorators import api_view,schema
 from rest_framework.response import Response
@@ -13,6 +11,9 @@ from rest_framework.schemas import AutoSchema
 from rest_framework.views import APIView
 
 
+
+def validate(str):
+    return (len(str.strip())>0 and not(str.isnumeric()))
 
 '''class Tarnslations(APIView):
 
@@ -48,23 +49,27 @@ def api(request):
 @api_view(['GET','POST','DELETE','PUT'])
 def tarnslations(request,id=False):
 
-    if request.method=="Post":
-        serializer = TarnslationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method=="POST":
+        
+        print(request.data['input_text'])
+        if(validate(request.data['input_text']) and validate(request.data['output_text'])):
+            serializer = TarnslationSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method=='PUT' and id:
-        try:
-            translations=Translation.objects.get(id=id)
-        except:
-            return Response({"message":"invalid id"}, status=status.HTTP_404_NOT_FOUND)
+        if(validate(request.data['input_text']) and validate(request.data['output_text'])):
+            try:
+                translations=Translation.objects.get(id=id)
+            except:
+                return Response({"message":"invalid id"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = TarnslationSerializer(instance=translations,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = TarnslationSerializer(instance=translations,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method=="DELETE" and id:
         try:
@@ -78,7 +83,7 @@ def tarnslations(request,id=False):
             translations=Translation.objects.get(id=id)
         except:
             return Response({"message":"invalid id"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = TarnslationSerializer(data=model_to_dict( translations ),many=False)
+        serializer = TarnslationSerializer(instance=translations,data=model_to_dict( translations ),many=False)
         if serializer.is_valid():
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)

@@ -9,7 +9,7 @@ class Translation(models.Model):
 
     class Meta:
         db_table="translation"
-
+    
 """
 {"input_text":"ok",
    "output_text":"yes"}"""
